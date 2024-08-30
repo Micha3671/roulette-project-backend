@@ -1,5 +1,5 @@
 - name: Install Nginx on Ubuntu
-  hosts: TestInstances
+  hosts: webservers
   become: yes
   tasks:
     - name: Ensure Nginx is installed

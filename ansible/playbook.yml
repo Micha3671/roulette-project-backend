@@ -17,3 +17,5 @@
     - name: Display Git Version
       debug:
         var: git_version_output.stdout
+# ansible -i hosts.ini all -m ping
+# ansible-playbook -i hosts.ini playbook.yml

@@ -38,4 +38,20 @@ AuthRouter.post("/signup", async (req, res) => {
   res.status(StatusCodes.OK).json({ user, tokens: { accessToken: myToken } });
 });
 
+AuthRouter.delete("/logout", async (req, res) => {
+  if (req.session) {
+    req.session.destroy(err => {
+      if (err) {
+        return res
+          .status(StatusCodes.INTERNAL_SERVER_ERROR)
+          .send("Logout fehlgeschlagen");
+      }
+      res.clearCookie("sessionID");
+      res.status(StatusCodes.OK).send("Logout erfolgreich");
+    });
+  } else {
+    res.status(StatusCodes.OK).send("Keine aktive Sitzung zum Abmelden");
+  }
+});
+
 module.exports = { AuthRouter };

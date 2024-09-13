@@ -37,23 +37,31 @@ HighscoresRouter.get("/byuserid", async (req, res) => {
   res.status(StatusCodes.OK).json({ highscores: userHighscores });
 });
 
+HighscoresRouter.get("/update", async (req, res) => {
+  // const userId = req.body.userId;
+  // const userId = parseInt(req.query.userId);
+  const userId = req.query.userId;
+  const gameId = req.query.gameId;
+
+  if (!userId || !gameId) {
+    res
+      .status(StatusCodes.BAD_REQUEST)
+      .send(ReasonPhrases.BAD_REQUEST + " Keine userID oder keine gameID");
+    return;
+  }
+
+  const userTop5 = await HighscoreModel.findAll({
+    where: { userId, gameId },
+    limit: 5,
+    order: [["highscore", "DESC"]],
+  });
+
+  res.status(StatusCodes.OK).json(userTop5);
+});
+
 HighscoresRouter.get("/all", async (req, res) => {
   const highscores = await HighscoreModel.findAll();
   res.status(StatusCodes.OK).send(highscores);
-});
-
-HighscoresRouter.put("/update", async (req, res) => {
-  const { highscoreId, newHighscore, newGameId } = req.body;
-
-  await HighscoreModel.update(
-    {
-      highscore: newHighscore,
-      gameId: newGameId,
-    },
-    { where: { id: highscoreId } },
-  );
-
-  res.status(StatusCodes.OK).json({ updatedHighscoreId: highscoreId });
 });
 
 // POST REQUESTS

@@ -7,7 +7,7 @@ const authMiddleWare = require("../middlewares/authMiddleware");
 const AppRouter = Router();
 
 AppRouter.use("/auth", AuthRouter);
-AppRouter.use("/users", UserRouter);
+AppRouter.use("/users", authMiddleWare, UserRouter);
 AppRouter.use("/highscores", HighscoresRouter);
 
 module.exports = AppRouter;

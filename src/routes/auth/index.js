@@ -22,6 +22,7 @@ AuthRouter.post("/login", async (req, res) => {
   user.password = null;
 
   const myToken = AccessTokens.createAccessToken(user.id);
+  console.log(myToken);
 
   res.status(StatusCodes.OK).json({ user, tokens: { accessToken: myToken } });
 });

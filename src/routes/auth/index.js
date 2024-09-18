@@ -8,12 +8,14 @@ const AuthRouter = Router();
 // POST REQUESTS
 
 AuthRouter.post("/login", async (req, res) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
+  const { userName, password } = req.body;
+  if (!userName || !password) {
     res.status(StatusCodes.BAD_REQUEST).send(ReasonPhrases.BAD_REQUEST);
     return;
   }
-  const user = await UserModel.scope("allData").findOne({ where: { email } });
+  const user = await UserModel.scope("allData").findOne({
+    where: { userName },
+  });
 
   if (user.password !== password) {
     res.status(StatusCodes.UNAUTHORIZED).send(ReasonPhrases.UNAUTHORIZED);
@@ -28,12 +30,17 @@ AuthRouter.post("/login", async (req, res) => {
 });
 
 AuthRouter.post("/signup", async (req, res) => {
-  const { email, password, userName, age } = req.body;
-  if (!email || !password || !userName || !age) {
+  const { email, password, userName, dob } = req.body;
+  if (!email || !password || !userName || !dob) {
     res.status(StatusCodes.BAD_REQUEST).send(ReasonPhrases.BAD_REQUEST);
     return;
   }
-  const user = await UserModel.create({ email, password, userName, age });
+  const user = await UserModel.create({
+    email: email.toLowerCase().trim(),
+    password,
+    userName,
+    dob,
+  });
   user.password = null;
   const myToken = AccessTokens.createAccessToken(user.id);
   res.status(StatusCodes.OK).json({ user, tokens: { accessToken: myToken } });

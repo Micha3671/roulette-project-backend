@@ -5,7 +5,7 @@ const HighscoreModel = require("../../database/models/HighscoreModel");
 const HighscoresRouter = Router();
 
 // GET REQUESTS
-// /v1/todos/bytodoid
+// /v1/highscores/byid
 HighscoresRouter.get("/byid", async (req, res) => {
   const highscoreId = req.query.highscoreId;
   if (!highscoreId) {
@@ -19,10 +19,8 @@ HighscoresRouter.get("/byid", async (req, res) => {
   res.status(StatusCodes.OK).json({ highscore });
 });
 
-// Alle Todos von einer UserId
+// Alle Highscores von einer UserId
 HighscoresRouter.get("/byuserid", async (req, res) => {
-  // const userId = req.body.userId;
-  // const userId = parseInt(req.query.userId);
   const userId = req.query.userId;
 
   if (!userId) {
@@ -37,12 +35,10 @@ HighscoresRouter.get("/byuserid", async (req, res) => {
   res.status(StatusCodes.OK).json({ highscores: userHighscores });
 });
 
+// GET Top 5 Highscores of a user of a game
 HighscoresRouter.get("/update", async (req, res) => {
-  // const userId = req.body.userId;
-  // const userId = parseInt(req.query.userId);
   const userId = req.query.userId;
   const gameId = req.query.gameId;
-
   if (!userId || !gameId) {
     res
       .status(StatusCodes.BAD_REQUEST)
@@ -55,7 +51,7 @@ HighscoresRouter.get("/update", async (req, res) => {
     limit: 5,
     order: [["highscore", "DESC"]],
   });
-
+  console.log(userTop5);
   res.status(StatusCodes.OK).json(userTop5);
 });
 

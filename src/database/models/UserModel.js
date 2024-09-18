@@ -13,8 +13,8 @@ const UserModel = casinoSequelize.define(
       allowNull: false,
     },
 
-    age: {
-      type: DataTypes.INTEGER,
+    dob: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
 

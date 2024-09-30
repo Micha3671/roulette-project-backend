@@ -20,34 +20,34 @@ HighscoresRouter.get("/byid", async (req, res) => {
 });
 
 // Alle Highscores von einer UserId
-HighscoresRouter.get("/byuserid", async (req, res) => {
-  const userId = req.query.userId;
+HighscoresRouter.get("/byusername", async (req, res) => {
+  const userName = req.query.userName;
 
-  if (!userId) {
+  if (!userName) {
     res
       .status(StatusCodes.BAD_REQUEST)
-      .send(ReasonPhrases.BAD_REQUEST + " Keine userID");
+      .send(ReasonPhrases.BAD_REQUEST + " Keine userName");
     return;
   }
 
-  const userHighscores = await HighscoreModel.findAll({ where: { userId } });
+  const userHighscores = await HighscoreModel.findAll({ where: { userName } });
 
   res.status(StatusCodes.OK).json({ highscores: userHighscores });
 });
 
 // GET Top 5 Highscores of a user of a game
 HighscoresRouter.get("/update", async (req, res) => {
-  const userId = req.query.userId;
+  const userName = req.query.userName;
   const gameId = req.query.gameId;
-  if (!userId || !gameId) {
+  if (!userName || !gameId) {
     res
       .status(StatusCodes.BAD_REQUEST)
-      .send(ReasonPhrases.BAD_REQUEST + " Keine userID oder keine gameID");
+      .send(ReasonPhrases.BAD_REQUEST + " Kein userName oder keine gameId");
     return;
   }
 
   const userTop5 = await HighscoreModel.findAll({
-    where: { userId, gameId },
+    where: { userName, gameId },
     limit: 5,
     order: [["highscore", "DESC"]],
   });
@@ -62,18 +62,20 @@ HighscoresRouter.get("/all", async (req, res) => {
 
 // POST REQUESTS
 HighscoresRouter.post("/create", async (req, res) => {
-  const { newHighscore, newGameId, newUserId } = req.body;
+  const { newHighscore, newGameId, newUserName } = req.body;
 
-  console.log("Here we are", newHighscore, newGameId, newUserId);
-  if (!newHighscore || !newGameId || !newUserId) {
+  console.log("Here we are", newHighscore, newGameId, newUserName);
+  if (!newHighscore || !newGameId || !newUserName) {
+    console.log("error log");
     throw ReferenceError("One of my required Parameters is not defined");
   }
 
   const newScore = {
     highscore: newHighscore,
     gameId: newGameId,
-    userId: newUserId,
+    userName: newUserName,
   };
+  console.log("newScore log");
 
   const highscore = await HighscoreModel.create(newScore);
 

@@ -12,8 +12,8 @@ const HighscoreModel = casinoSequelize.define(
       autoIncrement: true,
       allowNull: false,
     },
-    userId: {
-      type: DataTypes.INTEGER,
+    userName: {
+      type: DataTypes.STRING,
       allowNull: false,
     },
     gameId: {
